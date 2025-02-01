@@ -14,7 +14,7 @@ Este diagrama muestra la infraestructura AWS completa, incluyendo:
 - CloudWatch para logs y métricas
 
 ### Diagrama de CI/CD
-![Diagrama de CI/CD](docs/cicd.drawio.png.png)
+![Diagrama de CI/CD](docs/cicd.drawio.png)
 
 El pipeline de CI/CD incluye:
 - Integración con GitHub
@@ -31,7 +31,7 @@ La API REST proporciona:
 - Detalle de usuario (GET /api/users/{id}/)
 
 ### Diagrama de Kubernetes
-![Diagrama de Kubernetes](docs/k8s.drawio.png.png)
+![Diagrama de Kubernetes](docs/k8s.drawio.png)
 
 La arquitectura de Kubernetes incluye:
 - Pods de Django
