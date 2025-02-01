@@ -4,39 +4,41 @@ Este proyecto implementa una API REST con Django y se despliega en AWS EKS usand
 
 ## Arquitectura
 
-### Diagrama de Infraestructura
-mermaid
-graph TB
-Internet((Internet)) --> ALB[Application Load Balancer]
-subgraph VPC
-subgraph Public Subnets
-ALB --> |Route traffic| NG[NAT Gateway]
-end
-subgraph Private Subnets
-subgraph EKS Cluster
-NG --> |Internet access| Node1[Worker Node 1]
-NG --> |Internet access| Node2[Worker Node 2]
-subgraph Pods
-Node1 --> Pod1[Django API Pod 1]
-Node1 --> Pod2[Django API Pod 2]
-Node2 --> Pod3[Django API Pod 3]
-end
-end
-end
-end
-CW[CloudWatch] --> |Logs & Metrics| EKS Cluster
+### Diagrama de Infraestructura AWS
+![Diagrama de Infraestructura AWS](docs/aws.drawio.png)
 
+Este diagrama muestra la infraestructura AWS completa, incluyendo:
+- VPC con subnets públicas y privadas
+- EKS cluster
+- Application Load Balancer
+- CloudWatch para logs y métricas
 
 ### Diagrama de CI/CD
+![Diagrama de CI/CD](docs/cicd.drawio.png.png)
 
-mermaid
-graph LR
-Dev[Developer] -->|Push| Git[GitHub Repo]
-Git -->|Trigger| GHA[GitHub Actions]
-subgraph CI/CD Pipeline
-GHA -->|Run| Tests[Django Tests]
-Tests -->|If Pass| Build[Docker Build]
-end
+El pipeline de CI/CD incluye:
+- Integración con GitHub
+- Tests automatizados
+- Build de imagen Docker
+- Despliegue a EKS
+
+### Diagrama de Flujo de API
+![Diagrama de Flujo de API](docs/api.drawio.png)
+
+La API REST proporciona:
+- Listado de usuarios (GET /api/users/)
+- Creación de usuarios (POST /api/users/)
+- Detalle de usuario (GET /api/users/{id}/)
+
+### Diagrama de Kubernetes
+![Diagrama de Kubernetes](docs/k8s.drawio.png.png)
+
+La arquitectura de Kubernetes incluye:
+- Pods de Django
+- ConfigMaps y Secrets
+- Service tipo ClusterIP
+- Ingress con ALB
+- Auto-scaling
 
 
 ## Componentes Principales
