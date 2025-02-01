@@ -22,21 +22,25 @@ jobs:
           python-version: '3.11'
           
       - name: Install dependencies
+        working-directory: ./test
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
       - name: Run migrations
+        working-directory: ./test
         run: |
           python manage.py makemigrations
           python manage.py migrate
           
       - name: Run tests
+        working-directory: ./test
         env:
           DJANGO_SETTINGS_MODULE: demo.settings
-          PYTHONPATH: ${{ github.workspace }}
+          PYTHONPATH: ${{ github.workspace }}/test
+          DJANGO_SECRET_KEY: "test-key-for-ci"
         run: |
-          python -m pytest
+          pytest
 
   build-and-push:
     needs: [test]
@@ -57,6 +61,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Build and push Docker image
+        working-directory: ./test
         run: |
           docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
@@ -76,6 +81,7 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
           
       - name: Deploy to Kubernetes
+        working-directory: ./test
         run: |
           kubectl apply -f k8s/
           kubectl set image deployment/django-api django-api=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
