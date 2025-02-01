@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI Pipeline
 
 on:
   push:
@@ -41,58 +41,15 @@ jobs:
         run: |
           cd test/demo && python -m pytest -v
 
-  build-and-push:
+  build:
     needs: [test]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    permissions:
-      contents: read
-      packages: write
     
     steps:
       - uses: actions/checkout@v3
       
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Build and push Docker image
+      - name: Build Docker image
         working-directory: ./test
         run: |
-          IMAGE_ID=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          VERSION=${{ github.sha }}
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          docker build -t $IMAGE_ID:$VERSION .
-          docker push $IMAGE_ID:$VERSION
-
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Configure kubectl
-        uses: azure/k8s-set-context@v3
-        with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
-          
-      - name: Deploy to Kubernetes
-        working-directory: ./test
-        run: |
-          IMAGE_ID=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          VERSION=${{ github.sha }}
-          kubectl apply -f k8s/
-          kubectl set image deployment/django-api django-api=$IMAGE_ID:$VERSION
-          kubectl rollout status deployment/django-api
-          
-      - name: Verify Deployment
-        run: |
-          kubectl get deployment django-api -o wide
-          kubectl get pods -l app=django-api 
+          docker build -t django-api:latest . 
