@@ -22,22 +22,22 @@ jobs:
           python-version: '3.11'
           
       - name: Install dependencies
-        working-directory: ./test
+        working-directory: ./test/demo
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r ../../requirements.txt
           
       - name: Run migrations
-        working-directory: ./test
+        working-directory: ./test/demo
         run: |
           python manage.py makemigrations
           python manage.py migrate
           
       - name: Run tests
-        working-directory: ./test
+        working-directory: ./test/demo
         env:
           DJANGO_SETTINGS_MODULE: demo.settings
-          PYTHONPATH: ${{ github.workspace }}/test
+          PYTHONPATH: ${{ github.workspace }}/test/demo
           DJANGO_SECRET_KEY: "test-key-for-ci"
         run: |
           pytest
