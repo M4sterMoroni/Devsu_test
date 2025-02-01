@@ -17,6 +17,9 @@ def create_user(dni, name):
     }
     
     try:
+        # Test connection first
+        requests.get(url.rstrip('/'))
+        
         # Make POST request
         response = requests.post(url, json=payload, headers=headers)
         
@@ -26,13 +29,21 @@ def create_user(dni, name):
         # Parse and return response
         return response.json()
     
+    except requests.exceptions.ConnectionError:
+        print("Error: No se puede conectar al servidor. Por favor, verifica que:")
+        print("1. El servidor está ejecutándose")
+        print("2. La URL es correcta (http://localhost:8000)")
+        print("3. El puerto 8000 está disponible y no bloqueado")
+        return None
     except requests.exceptions.RequestException as e:
         print(f"Error creating user: {e}")
+        if hasattr(e.response, 'text'):
+            print(f"Error details: {e.response.text}")
         return None
 
 def main():
     # Example usage
-    result = create_user("12345", "John Doe")
+    result = create_user("4321", "Carlos Monterroso") 
     
     if result:
         print("User created successfully:")

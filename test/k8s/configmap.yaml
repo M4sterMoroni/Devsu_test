@@ -4,6 +4,8 @@ metadata:
   name: django-config
 data:
   DJANGO_SETTINGS_MODULE: "demo.settings"
-  DEBUG: "0"
-  ALLOWED_HOSTS: "localhost,127.0.0.1"
-  PORT: "8000" 
+  DEBUG: "True"
+  ALLOWED_HOSTS: "*"
+  PORT: "8000"
+  DJANGO_SECRET_KEY: "your-secret-key-here"
+  DATABASE_NAME: "db.sqlite3" 

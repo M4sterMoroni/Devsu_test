@@ -18,6 +18,27 @@ spec:
       - name: django-api
         image: django-api:latest
         imagePullPolicy: Never
+        env:
+        - name: ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: ALLOWED_HOSTS
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: DEBUG
+        - name: DJANGO_SECRET_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: DJANGO_SECRET_KEY
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: DATABASE_NAME
         ports:
         - containerPort: 8000
         resources:
