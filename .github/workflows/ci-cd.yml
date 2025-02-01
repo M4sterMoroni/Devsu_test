@@ -21,10 +21,6 @@ jobs:
         with:
           python-version: '3.11'
           
-      - name: List directory structure
-        run: |
-          ls -R
-
       - name: Install dependencies
         working-directory: ./test/demo
         run: |
@@ -43,7 +39,7 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}/test/demo
           DJANGO_SECRET_KEY: "test-key-for-ci"
         run: |
-          cd test/demo && ls -R && python -m pytest -v
+          cd test/demo && python -m pytest -v
 
   build-and-push:
     needs: [test]
