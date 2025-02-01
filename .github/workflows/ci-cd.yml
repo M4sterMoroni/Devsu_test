@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner | lower }}/devsu_test
+  IMAGE_NAME: m4stermoroni/devsu_test
 
 jobs:
   test:
@@ -63,7 +63,6 @@ jobs:
         working-directory: ./test
         run: |
           IMAGE_ID=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           VERSION=${{ github.sha }}
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
@@ -88,7 +87,6 @@ jobs:
         working-directory: ./test
         run: |
           IMAGE_ID=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           VERSION=${{ github.sha }}
           kubectl apply -f k8s/
           kubectl set image deployment/django-api django-api=$IMAGE_ID:$VERSION
