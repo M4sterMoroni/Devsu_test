@@ -34,13 +34,12 @@ jobs:
           python manage.py migrate
           
       - name: Run tests
-        working-directory: ./test/demo
         env:
           DJANGO_SETTINGS_MODULE: demo.settings
           PYTHONPATH: ${{ github.workspace }}/test/demo
           DJANGO_SECRET_KEY: "test-key-for-ci"
         run: |
-          pytest
+          cd test/demo && python -m pytest api/test.py -v
 
   build-and-push:
     needs: [test]
